@@ -56,8 +56,7 @@ This class lets you **download posts, reels, stories, highlights, or full profil
 
 ### 1. Installation
 ```bash
-git clone https://github.com/yourusername/instagram-client.git
-cd instagram-client
+git clone https://github.com/matin2002programmer/Instagram_Client.git
 pip install -r requirements.txt
 ```
 
