@@ -129,7 +129,7 @@ Using context manager
 
 with InstagramClient() as client:
     client.login("your_username", "your_password")
-    client.download_story("https://www.instagram.com/stories/user/1234567890/")
+    client.download_story("https://www.instagram.com/stories/user/1234567890/")```
 
 
 
