@@ -1,108 +1,270 @@
-
 # InstagramClient
 
-An advanced **Instagram Media Downloader & Uploader** built in Python.  
-This class lets you **download posts, reels, stories, highlights, or full profiles**, as well as **upload posts/reels** and **comment on posts** — all programmatically.
+A powerful and flexible **Instagram Media Downloader & Uploader** built in Python.  
+This client allows you to programmatically download, upload, interact with posts, and manage sessions using Instagram’s private web APIs.
 
 ---
 
-## ✨ Features
+## 🚀 Features
 
-- 🔽 **Download**  
-  - Posts (single image, video, or carousel)  
-  - Reels  
-  - Stories (single story via URL or all active stories)  
+### 📥 Download
+- Posts (single image, video, and carousel)
+- Reels
+- Stories (by URL or all active stories from a user)
+- Highlights
+- Full profiles  
+  - Profile picture  
+  - All posts  
+  - Stories  
   - Highlights  
-  - Full profile (profile pic, posts, stories, highlights)
 
-- 🔼 **Upload**  
-  - Photos with captions  
-  - Reels (with optional thumbnail and captions)
+### 📤 Upload
+- Upload a **photo** with caption
+- Upload a **reel (video)** with optional thumbnail and caption
 
-- 💬 **Interact**  
-  - Comment on any post by URL  
-  - Comment on the latest post of a user  
+### 💬 Interactions
+- Comment on a post
+- Comment on the user’s latest post
+- **Like a post**
+- **Unlike a post**
 
-- 🔒 **Authentication**  
-  - Cookie persistence (auto-load & save login cookies)  
-  - Automatic re-login handling  
+### 🔄 Authentication & Session Handling
+- Cookie persistence (auto-save & reuse)
+- Automatic re-login when required
+- Manages Instagram tokens (CSRF, rollout hash, mid, lsd)
+- Randomized user-agent to reduce detection risk
 
----
-
-## ⚙️ How It Works
-
-1. **HTTP Session & Tokens**  
-   - Uses [`httpx`](https://www.python-httpx.org/) for requests.  
-   - Fetches and manages **CSRF tokens**, **LSD tokens**, and session cookies for API calls.  
-   - Randomizes user agents to avoid detection.  
-
-2. **GraphQL & REST Endpoints**  
-   - Uses Instagram’s private GraphQL `doc_id`s for posts, user feeds, and highlights.  
-   - Uses REST API endpoints for stories and uploads.  
-
-3. **Media Handling**  
-   - Smart filename generation (sanitized from caption/shortcode).  
-   - Downloads with progress tracking.  
-   - Handles both images (`.jpg`) and videos (`.mp4`).  
-
-4. **Upload Flow**  
-   - Splits into two steps:  
-     - **Upload** (chunked upload of photo/video).  
-     - **Configure** (finalize post or reel with caption).  
+### ⚙️ Internal Engine
+- Uses `httpx` for all HTTP operations
+- Works with both **GraphQL** and **Private REST** endpoints
+- Smart filename generation
+- Automatic decoding and saving of media files
 
 ---
 
-## 🚀 Usage Guide
+## 📦 Installation
 
-### 1. Installation
 ```bash
 git clone https://github.com/matin2002programmer/Instagram_Client.git
+cd Instagram_Client
 pip install -r requirements.txt
-```
 
-### 2. Basic Example
-```python
+
+
+
+💡 Basic Usage
+
+
+Login
+
+
 from Instagram_Client import InstagramClient
 
-# Initialize client
 client = InstagramClient()
-
-# Login (saves cookies for future sessions)
 client.login("your_username", "your_password")
 
-# Download a post
+
+
+Download a post
+
+
 client.download_post("https://www.instagram.com/p/SHORTCODE/")
 
-# Download a full profile
-client.download_user_profile("cristiano", max_posts=10)
 
-# Upload a photo
-client.upload_photo("path/to/photo.jpg", caption="Hello Instagram!")
 
-# Upload a reel
-client.upload_reel("path/to/video.mp4", caption="Check this out 🚀")
+Download a profile
 
-# Comment on a post
-client.comment_on_post("https://www.instagram.com/p/SHORTCODE/", "Nice post!")
 
-# Comment on first (latest) post of a user
-client.comment_on_first_post("natgeo", "Beautiful work!")
-```
+client.download_user_profile("username_here", max_posts=20)
 
-### 3. Context Manager (auto-close session)
-```python
+
+
+Upload a photo
+
+
+client.upload_photo("photo.jpg", caption="Hello World!")
+
+
+
+Upload a reel
+
+
+client.upload_reel("video.mp4", caption="Check this out!")
+
+
+
+Comment on a post
+
+
+client.comment_on_post(
+    "https://www.instagram.com/p/SHORTCODE/",
+    "Nice post! 🚀"
+)
+
+
+
+Comment on the user's latest post
+
+
+client.comment_on_first_post("someuser", "Awesome!")
+
+
+
+👍 Like a post
+
+
+client.like_post("https://www.instagram.com/p/SHORTCODE/")
+
+
+
+👎 Unlike a post
+
+
+client.unlike_post("https://www.instagram.com/p/SHORTCODE/")
+
+
+
+Using context manager
+
+
 with InstagramClient() as client:
     client.login("your_username", "your_password")
     client.download_story("https://www.instagram.com/stories/user/1234567890/")
-```
 
----
 
-## ⚠️ Notes
 
-- Uploading/commenting uses private web APIs → these may change, so stability is not 100% guaranteed.  
-- Use responsibly; Instagram may **block accounts** that abuse these APIs.  
-- For private profiles, you need to be logged in with permission to view.  
+
+⚠️ Notes & Limitations
+
+
+
+
+Instagram private API can change at any time — updates may be required
+
+
+Automating likes/comments too fast may trigger rate limits
+
+
+For private profiles, you must be logged in and have access
+
+
+Large downloads (full profiles) may take time depending on network speed
+
+
+
+
+
+🛠️ Recommended Improvements (Future Enhancements)
+
+
+These optimizations would make the repo even stronger:
+
+
+1. Better Error Handling
+
+
+
+
+Wrap all HTTP actions in try/except
+
+
+Implement retry with exponential backoff for failed requests
+
+
+Identify and handle "login required" responses gracefully
+
+
+
+
+2. Type Hinting
+
+
+
+
+Add type hints across classes and methods
+
+
+Improves maintainability and editor autocompletion
+
+
+
+
+3. Logging System
+
+
+
+
+Use Python’s built-in logging module
+
+
+Add levels: DEBUG, INFO, WARNING, ERROR
+
+
+Allow user to enable/disable detailed API logs
+
+
+
+
+4. Rate Limiting
+
+
+
+
+Add optional delay between actions
+
+
+Avoid accidental spam-like behavior
+
+
+
+
+5. Add Tests
+
+
+
+
+Unit tests for parsing
+
+
+Integration tests using mocked responses
+
+
+
+
+6. More Documentation
+
+
+Create:
+
+
+
+
+/docs folder
+
+
+/examples folder
+
+
+“How the upload API works” document
+
+
+
+
+
+📜 License
+
+
+MIT License — open-source and free to use.
+
+
+
+🙏 Support
+
+
+If you find this project useful, consider starring ⭐ the repo!
+
+
+
 
 ---
 
